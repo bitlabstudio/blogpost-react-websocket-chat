@@ -8,22 +8,23 @@ class Chat extends Component {
   state = {
     name: 'Bob',
     messages: [],
-    ws: new WebSocket(URL),
   }
 
+  ws = new WebSocket(URL)
+
   componentDidMount() {
-    this.state.ws.onopen = () => {
+    this.ws.onopen = () => {
       // on connecting, do nothing but log it to the console
       console.log('connected')
     }
 
-    this.state.ws.onmessage = evt => {
+    this.ws.onmessage = evt => {
       // on receiving a message, add it to the list of messages
       const message = JSON.parse(evt.data)
       this.addMessage(message)
     }
 
-    this.state.ws.onclose = () => {
+    this.ws.onclose = () => {
       console.log('disconnected')
       // automatically try to reconnect on connection loss
       this.setState({
@@ -38,9 +39,8 @@ class Chat extends Component {
   submitMessage = messageString => {
     // on submitting the ChatInput form, send the message, add it to the list and reset the input
     const message = { name: this.state.name, message: messageString }
-    this.state.ws.send(JSON.stringify(message))
+    this.ws.send(JSON.stringify(message))
     this.addMessage(message)
-    this.setState({ message: '' })
   }
 
   render() {
@@ -57,7 +57,7 @@ class Chat extends Component {
           />
         </label>
         <ChatInput
-          ws={this.state.ws}
+          ws={this.ws}
           onSubmitMessage={messageString => this.submitMessage(messageString)}
         />
         {this.state.messages.map((message, index) =>
