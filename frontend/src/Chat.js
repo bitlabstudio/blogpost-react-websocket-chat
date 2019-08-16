@@ -5,12 +5,16 @@ import ChatMessage from './ChatMessage'
 const URL = 'ws://localhost:3030'
 
 class Chat extends Component {
-  state = {
-    name: 'Bob',
-    messages: [],
-  }
+  constructor(props) {
+    super(props)
 
-  ws = new WebSocket(URL)
+    this.state = {
+      name: 'Bob',
+      messages: [],
+    }
+
+    this.ws = new WebSocket(`${URL}?room=${props.room}`)
+  }
 
   componentDidMount() {
     this.ws.onopen = () => {
@@ -58,13 +62,13 @@ class Chat extends Component {
           ws={this.ws}
           onSubmitMessage={messageString => this.submitMessage(messageString)}
         />
-        {this.state.messages.map((message, index) =>
+        {this.state.messages.map((message, index) => (
           <ChatMessage
             key={index}
             message={message.message}
             name={message.name}
-          />,
-        )}
+          />
+        ))}
       </div>
     )
   }
