@@ -3,11 +3,36 @@ import logo from './logo.svg'
 import './App.css'
 import Chat from './Chat'
 
+const URL = 'ws://localhost:3030'
+
 class App extends Component {
   state = {
     room: "Dan's React Chat",
     name: 'Bob',
     connected: false,
+    rooms: [],
+  }
+  ws = new WebSocket(`${URL}?info=1`)
+
+  componentDidMount() {
+    this.ws.onopen = () => {
+      // on connecting, do nothing but log it to the console
+      console.log('connected')
+    }
+
+    this.ws.onmessage = evt => {
+      // on receiving a message, add it to the list of messages
+      const message = JSON.parse(evt.data)
+      this.setState({ rooms: message.rooms })
+    }
+
+    this.ws.onclose = () => {
+      console.log('disconnected')
+    }
+  }
+
+  componentWillUnmount() {
+    this.ws.close()
   }
   render() {
     return (
@@ -18,6 +43,27 @@ class App extends Component {
         </header>
         {!this.state.connected && (
           <React.Fragment>
+            <h2>Select a room</h2>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              {this.state.rooms.map(room => (
+                <button
+                  key={room}
+                  style={{ display: 'flex' }}
+                  onClick={() => this.setState({ connected: true, room })}
+                >
+                  {room}
+                </button>
+              ))}
+              {this.state.rooms.length === 0 && (
+                <p>No rooms registered. Connect to a room to get started.</p>
+              )}
+            </div>
             <label htmlFor="name">
               Name:&nbsp;
               <input
