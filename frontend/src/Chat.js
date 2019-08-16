@@ -9,7 +9,6 @@ class Chat extends Component {
     super(props)
 
     this.state = {
-      name: 'Bob',
       messages: [],
     }
 
@@ -20,6 +19,7 @@ class Chat extends Component {
     this.ws.onopen = () => {
       // on connecting, do nothing but log it to the console
       console.log('connected')
+      this.submitMessage('joined the room')
     }
 
     this.ws.onmessage = evt => {
@@ -41,7 +41,7 @@ class Chat extends Component {
   submitMessage = messageString => {
     // on submitting the ChatInput form, send the message, add it to the list and reset the input
     const message = {
-      name: this.state.name,
+      name: this.props.name,
       message: messageString,
       room: this.props.room,
     }
@@ -52,16 +52,6 @@ class Chat extends Component {
   render() {
     return (
       <div>
-        <label htmlFor="name">
-          Name:&nbsp;
-          <input
-            type="text"
-            id={'name'}
-            placeholder={'Enter your name...'}
-            value={this.state.name}
-            onChange={e => this.setState({ name: e.target.value })}
-          />
-        </label>
         <ChatInput
           ws={this.ws}
           onSubmitMessage={messageString => this.submitMessage(messageString)}

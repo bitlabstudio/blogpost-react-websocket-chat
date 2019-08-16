@@ -6,6 +6,7 @@ import Chat from './Chat'
 class App extends Component {
   state = {
     room: "Dan's React Chat",
+    name: 'Bob',
     connected: false,
   }
   render() {
@@ -15,6 +16,16 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
+        <label htmlFor="name">
+          Name:&nbsp;
+          <input
+            type="text"
+            id={'name'}
+            placeholder={'Enter your name...'}
+            value={this.state.name}
+            onChange={e => this.setState({ name: e.target.value })}
+          />
+        </label>
         {!this.state.connected && (
           <React.Fragment>
             <label htmlFor="room">
@@ -37,7 +48,7 @@ class App extends Component {
             <button onClick={() => this.setState({ connected: false })}>
               Disconnect from "{this.state.room}"
             </button>
-            <Chat room={this.state.room} />
+            <Chat room={this.state.room} name={this.state.name} />
           </React.Fragment>
         )}
       </div>
