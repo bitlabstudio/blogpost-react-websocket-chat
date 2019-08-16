@@ -31,7 +31,7 @@ class Chat extends Component {
     this.ws.onclose = () => {
       console.log('disconnected')
       // automatically try to reconnect on connection loss
-      this.ws = new WebSocket(URL)
+      this.ws = new WebSocket(`${URL}?room=${this.props.room}`)
     }
   }
 
@@ -40,7 +40,11 @@ class Chat extends Component {
 
   submitMessage = messageString => {
     // on submitting the ChatInput form, send the message, add it to the list and reset the input
-    const message = { name: this.state.name, message: messageString }
+    const message = {
+      name: this.state.name,
+      message: messageString,
+      room: this.props.room,
+    }
     this.ws.send(JSON.stringify(message))
     this.addMessage(message)
   }
