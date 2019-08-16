@@ -18,10 +18,13 @@ wss.on('connection', function connection(ws, req) {
   addClientToRoom(roomName.room, ws)
 
   ws.on('message', function incoming(data) {
-    wss.clients.forEach(function each(client) {
+
+    // when receiving a message, only send to those who are in the room
+    const roomName = JSON.parse(data).room
+    rooms[roomName].forEach(function each(client) {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(data);
+        client.send(data)
       }
-    });
-  });
-});
+    })
+  })
+})
