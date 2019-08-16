@@ -16,18 +16,18 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <label htmlFor="name">
-          Name:&nbsp;
-          <input
-            type="text"
-            id={'name'}
-            placeholder={'Enter your name...'}
-            value={this.state.name}
-            onChange={e => this.setState({ name: e.target.value })}
-          />
-        </label>
         {!this.state.connected && (
           <React.Fragment>
+            <label htmlFor="name">
+              Name:&nbsp;
+              <input
+                type="text"
+                id={'name'}
+                placeholder={'Enter your name...'}
+                value={this.state.name}
+                onChange={e => this.setState({ name: e.target.value })}
+              />
+            </label>
             <label htmlFor="room">
               Room:&nbsp;
               <input
@@ -48,7 +48,11 @@ class App extends Component {
             <button onClick={() => this.setState({ connected: false })}>
               Disconnect from "{this.state.room}"
             </button>
-            <Chat room={this.state.room} name={this.state.name} />
+            <Chat
+              room={this.state.room}
+              name={this.state.name}
+              onDisconnect={() => this.setState({ connected: false })}
+            />
           </React.Fragment>
         )}
       </div>

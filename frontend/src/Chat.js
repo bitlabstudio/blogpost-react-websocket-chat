@@ -12,7 +12,7 @@ class Chat extends Component {
       messages: [],
     }
 
-    this.ws = new WebSocket(`${URL}?room=${props.room}`)
+    this.ws = new WebSocket(`${URL}?room=${props.room}&name=${this.props.name}`)
   }
 
   componentDidMount() {
@@ -30,9 +30,12 @@ class Chat extends Component {
 
     this.ws.onclose = () => {
       console.log('disconnected')
-      // automatically try to reconnect on connection loss
-      this.ws = new WebSocket(`${URL}?room=${this.props.room}`)
+      this.props.onDisconnect()
     }
+  }
+
+  componentWillUnmount() {
+    this.ws.close()
   }
 
   addMessage = message =>
