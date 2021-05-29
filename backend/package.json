@@ -3,6 +3,6 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "ws": "^6.0.0"
+    "ws": "^7.4.6"
   }
 }
