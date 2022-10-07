@@ -2,26 +2,30 @@ import React, { Component } from 'react'
 import ChatInput from './ChatInput'
 import ChatMessage from './ChatMessage'
 
-const URL = 'ws://localhost:3030'
+const URL = 'wss://tso-take-home-chat-room.herokuapp.com'
 
 class Chat extends Component {
   state = {
-    name: 'Bob',
+    name: '',
     messages: [],
+   
   }
 
   ws = new WebSocket(URL)
-
   componentDidMount() {
     this.ws.onopen = () => {
+    console.log('this.ws=>',this.ws) 
       // on connecting, do nothing but log it to the console
-      console.log('connected')
+      console.log('let us connected')
     }
 
     this.ws.onmessage = evt => {
       // on receiving a message, add it to the list of messages
-      const message = JSON.parse(evt.data)
-      this.addMessage(message)
+      const eachMessage=evt.data
+      console.log('this is eachMessage==>',eachMessage)
+      console.log('this is user name in socket=>',eachMessage.substring(0, eachMessage.indexOf(':')))
+      console.log('this is user Message socket-->',eachMessage.substring(eachMessage.indexOf(':')+2))
+      this.addMessage(eachMessage)
     }
 
     this.ws.onclose = () => {
@@ -33,17 +37,21 @@ class Chat extends Component {
     }
   }
 
-  addMessage = message =>
-    this.setState(state => ({ messages: [message, ...state.messages] }))
-
+  addMessage =(newMessage) =>{
+    console.log('add newMessage=>',newMessage);
+    this.setState(state => ({ messages: [...state.messages,newMessage] }))
+  }
   submitMessage = messageString => {
     // on submitting the ChatInput form, send the message, add it to the list and reset the input
-    const message = { name: this.state.name, message: messageString }
+    const message=`${this.state.name}:${messageString}`
+    console.log('sumbit Message message variable=>',message)
     this.ws.send(JSON.stringify(message))
     this.addMessage(message)
   }
 
   render() {
+    console.log('list of name===>',this.state.name)
+    console.log('list of messages===>',this.state.messages)
     return (
       <div>
         <label htmlFor="name">
@@ -60,11 +68,22 @@ class Chat extends Component {
           ws={this.ws}
           onSubmitMessage={messageString => this.submitMessage(messageString)}
         />
-        {this.state.messages.map((message, index) =>
+        {this.state.messages.sort((a,b)=>{ return(
+(b.substring(b.indexOf(':')+1).split(' ').length-1)-(a.substring(a.indexOf(':')+1).split(' ').length-1)
+
+)
+  
+})
+        
+        
+        
+        
+        .map((message, index) =>
           <ChatMessage
             key={index}
-            message={message.message}
-            name={message.name}
+            message={message}
+            // message={message.message}
+            // name={message.name}
           />,
         )}
       </div>
