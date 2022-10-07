@@ -5,7 +5,7 @@ class ChatInput extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      // name:''
+      name:'',
       message: '',
     }
 
@@ -16,19 +16,31 @@ class ChatInput extends Component {
  
   letSubmitMessage (e) {
     e.preventDefault()
-    this.props.onSubmitMessage(this.state.message)
-    this.setState({ message: '' })
+    this.props.onSubmitMessage(this.state.name,this.state.message)
+    this.setState({ 
+                    name:'',
+                    message: '' 
+                  })
   }
 
   render(props) {
     console.log('what props==>',this.props)
+    console.log('what state=>',this.state)
+    
     return (
+     <div>
       <form
         action="."
         onSubmit={
           this.letSubmitMessage
          }
       >
+      <input
+        type="text"
+        placeholder={'Enter your name...'}
+        value={this.state.name}
+        onChange={e => this.setState({ name: e.target.value })}
+      />
         <input
           type="text"
           placeholder={'Enter message...'}
@@ -37,6 +49,7 @@ class ChatInput extends Component {
         />
         <input type="submit"  />
       </form>
+     </div>
     )
   }
 }
