@@ -7,7 +7,6 @@ const URL = 'wss://tso-take-home-chat-room.herokuapp.com'
 class Chat extends Component {
   state = {
     messages: [],
-   
   }
 
   ws = new WebSocket(URL)
@@ -54,6 +53,16 @@ class Chat extends Component {
 
   render() {
     console.log('list of messages===>',this.state.messages)
+    const wordCount=(wordArr)=>{
+      let newArr=[]
+      for(let i=0;i<wordArr.length;i++){
+          if(wordArr[i]!==""){
+            newArr.push(wordArr[i])
+          }
+      }
+      return newArr.length
+    }
+
     return (
       <div>
         <ChatInput
@@ -61,12 +70,17 @@ class Chat extends Component {
           onSubmitMessage={(nameString,messageString) => this.submitMessage(nameString,messageString)}
         />
         {this.state.messages
-          .map((message, index) =>
+          .sort((a,b)=>{
+            const aSplit=a.split(' ');
+
+            const bSplit=b.split(' ')
+
+            return (wordCount(bSplit)-wordCount(aSplit))
+          })
+          .map((eachIndMessage, index) =>
             <ChatMessage
               key={index}
-              message={message}
-              // message={message.message}
-              // name={message.name}
+              eachIndMessage={eachIndMessage}
           />,
         )}
       </div>

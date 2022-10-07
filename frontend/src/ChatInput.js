@@ -26,7 +26,8 @@ class ChatInput extends Component {
   render(props) {
     console.log('what props==>',this.props)
     console.log('what state=>',this.state)
-    
+    const {name,message}=this.state
+    console.log('message input=>',message)    
     return (
      <div>
       <form
@@ -47,6 +48,7 @@ class ChatInput extends Component {
           value={this.state.message}
           onChange={e => this.setState({ message: e.target.value })}
         />
+      <div>Word-Count: {}</div>
         <input type="submit"  />
       </form>
      </div>

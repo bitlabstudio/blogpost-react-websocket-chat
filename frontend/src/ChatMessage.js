@@ -1,16 +1,28 @@
 import React from 'react'
 
-export default ({message }) =>{
-  console.log('message=>',message)
-  console.log('name try==>',message.substring(0,message.indexOf(':')))
-  let user=message.substring(0,message.indexOf(':'));
-  let userMessage=message.substring(message.indexOf(':')+1)
-  let wordCount=userMessage.split(' ').length-1
+export default ({eachIndMessage }) =>{
+  console.log('message=>',eachIndMessage)
+  console.log('name try==>',eachIndMessage.substring(0,eachIndMessage.indexOf(':')))
+  let user=eachIndMessage.substring(0,eachIndMessage.indexOf(':'));
+  let userMessage=eachIndMessage.substring(eachIndMessage.indexOf(':')+1)
+  console.log('UserMessage in chatMessage-=>',userMessage)
+  console.log('split dude=>',userMessage.split(' '))
+  let splitUserMessageArr=userMessage.split(' ')
+
+  const wordCount=(wordArr)=>{
+    let newArr=[]
+    for(let i=0;i<wordArr.length;i++){
+        if(wordArr[i]!==""){
+          newArr.push(wordArr[i])
+        }
+    }
+    return newArr.length
+  }
 
 
   return( 
      <p>
-    <strong>{user}</strong>: <em>{message}</em> <strong>Word-Count:{wordCount}</strong> 
+    <strong>{user}</strong>: <em>{userMessage}</em> <strong>Word-Count:{wordCount(splitUserMessageArr)}</strong> 
   </p>)
 }
 
